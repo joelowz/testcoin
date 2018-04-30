@@ -1,0 +1,86 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/chncoin/.chncoin" ]; then
+	CHNCOIND_DEFAULT_DATADIR="/var/lib/chncoin/.chncoin"
+else
+	CHNCOIND_DEFAULT_DATADIR="/var/lib/chncoind"
+fi
+
+CHNCOIND_CONFIGFILE=${CHNCOIND_CONFIGFILE:-/etc/chncoin/chncoin.conf}
+CHNCOIND_PIDDIR=${CHNCOIND_PIDDIR:-/var/run/chncoind}
+CHNCOIND_PIDFILE=${CHNCOIND_PIDFILE:-${CHNCOIND_PIDDIR}/chncoind.pid}
+CHNCOIND_DATADIR=${CHNCOIND_DATADIR:-${CHNCOIND_DEFAULT_DATADIR}}
+CHNCOIND_USER=${CHNCOIND_USER:-chncoin}
+CHNCOIND_GROUP=${CHNCOIND_GROUP:-chncoin}
+CHNCOIND_BIN=${CHNCOIND_BIN:-/usr/bin/chncoind}
+
+name="Chncoin Core Daemon"
+description="Chncoin crypto-currency p2p network daemon"
+
+command="/usr/bin/chncoind"
+command_args="-pid=\"${CHNCOIND_PIDFILE}\" \
+		-conf=\"${CHNCOIND_CONFIGFILE}\" \
+		-datadir=\"${CHNCOIND_DATADIR}\" \
+		-daemon \
+		${CHNCOIND_OPTS}"
+
+required_files="${CHNCOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${CHNCOIND_USER} \
+			-N ${CHNCOIND_NICE:-0} -w 2000"
+pidfile="${CHNCOIND_PIDFILE}"
+retry=60
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${CHNCOIND_USER}:${CHNCOIND_GROUP}" \
+	"${CHNCOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${CHNCOIND_USER}:${CHNCOIND_GROUP}" \
+	"${CHNCOIND_PIDDIR}"
+
+	checkpath -f \
+	-o ${CHNCOIND_USER}:${CHNCOIND_GROUP} \
+	-m 0660 \
+	${CHNCOIND_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${CHNCOIND_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run chncoind."
+		eerror "The setting must appear in ${CHNCOIND_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Chncoin Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

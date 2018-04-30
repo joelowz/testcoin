@@ -1,0 +1,6 @@
+usr/local/bin/chncoin-qt usr/bin
+share/pixmaps/chncoin32.xpm usr/share/pixmaps
+share/pixmaps/chncoin16.xpm usr/share/pixmaps
+share/pixmaps/chncoin128.png usr/share/pixmaps
+debian/chncoin-qt.desktop usr/share/applications
+debian/chncoin-qt.protocol usr/share/kde4/services/

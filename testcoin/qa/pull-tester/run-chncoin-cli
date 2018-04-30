@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# This is a thin wrapper around chncoin-cli that strips the Windows-style EOLs
+# from the output if present. It is necessary when using chncoin-cli.exe on
+# Linux since shells will interpret the line-endings as part of the result.
+
+CURDIR=$(cd $(dirname "$0"); pwd)
+# Get BUILDDIR and REAL_CHNCOIND
+
+# Grab the value of $REAL_CHNCOINCLI which may be chncoin-cli.exe.
+. "${CURDIR}/tests-config.sh"
+
+"${REAL_CHNCOINCLI}" "$@" | sed 's/\r//'

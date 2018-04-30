@@ -1,0 +1,7 @@
+[main]
+host = https://www.transifex.com
+
+[chncoin.qt-translation-010x]
+file_filter = src/qt/locale/chncoin_<lang>.ts
+source_file = src/qt/locale/chncoin_en.ts
+source_lang = en

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Chncoin
+Comment=Chncoin P2P Cryptocurrency
+Comment[fr]=Chncoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Chncoin, eşten eşe kriptografik sanal para birimi
+Exec=chncoin-qt %u
+Terminal=false
+Type=Application
+Icon=chncoin128
+MimeType=x-scheme-handler/chncoin;
+Categories=Office;Finance;

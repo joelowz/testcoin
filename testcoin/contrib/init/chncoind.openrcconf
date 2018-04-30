@@ -1,0 +1,27 @@
+# /etc/conf.d/chncoind: config file for /etc/init.d/chncoind
+
+# Config file location
+#CHNCOIND_CONFIGFILE="/etc/chncoin/chncoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $CHNCOIND_USER)
+#CHNCOIND_PIDDIR="/var/run/chncoind"
+
+# What filename to give the pidfile
+#CHNCOIND_PIDFILE="${CHNCOIND_PIDDIR}/chncoind.pid"
+
+# Where to write chncoind data (be mindful that the blockchain is large)
+#CHNCOIND_DATADIR="/var/lib/chncoind"
+
+# User and group to own chncoind process
+#CHNCOIND_USER="chncoin"
+#CHNCOIND_GROUP="chncoin"
+
+# Path to chncoind executable
+#CHNCOIND_BIN="/usr/bin/chncoind"
+
+# Nice value to run chncoind under
+#CHNCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+CHNCOIND_OPTS="-disablewallet"
+
